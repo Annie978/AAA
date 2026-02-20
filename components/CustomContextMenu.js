@@ -67,7 +67,6 @@ export default function CustomContextMenu(props) {
     window.addEventListener('click', handleClick)
 
     return () => {
-      window.removeEventListener('contextmenu', handleContextMenu)
       window.removeEventListener('click', handleClick)
     }
   }, [windowSize])
