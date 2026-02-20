@@ -99,7 +99,7 @@ nav {
   @apply right-auto left-0 hidden lg:block z-10 !important;
 }
 
-/* 隐藏滚动条 */
+/* Hide scrollbar */
 .scroll-hidden {
   -ms-overflow-style: none;
   overflow: -moz-scrollbars-none;
@@ -118,7 +118,6 @@ nav {
 
 .medium-zoom-overlay {
   background: none !important;
-  /* background: rgba(0, 0, 0, 0.01) none repeat scroll 0% 0% !important; */
 }
 
 .shadow-text {
@@ -164,12 +163,12 @@ nav {
   margin: -0.125em 0.25em;
 }
 
-/* twikoo 评论区超链接样式 */
+/* Twikoo comment link style */
 .tk-main a {
   @apply text-blue-700;
 }
 
-/* twikoo 内置的 element-ui 加载样式 */
+/* Twikoo element-ui loading style */
 .el-loading-spinner {
   @apply flex justify-center items-center;
 }
@@ -209,9 +208,6 @@ nav {
   margin-right: 0.2rem;
 }
 
-/* .webmention-counts .counts > span {
-  margin-right: .8rem;
-} */
 .webmention-counts .counts > span:not(:last-child):after {
   content: ' • ';
 }
@@ -267,11 +263,11 @@ a.avatar-wrapper {
 }
 
 .writing-vertical {
-  writing-mode: vertical-rl; /* 竖向排列从右向左 */
-  text-orientation: upright; /* 文字方向正常 */
+  writing-mode: vertical-rl;
+  text-orientation: upright;
 }
 
-/* Chatbase 在移动端禁止遮挡 */
+/* Chatbase mobile avoid occlusion */
 @media (max-width: 700px) {
   button#chatbase-bubble-button {
     margin-bottom: 42px;
@@ -287,64 +283,68 @@ img {
   overflow: hidden;
 }
 
-
-.lazy-image-placeholder{
+.lazy-image-placeholder {
   background: 
       linear-gradient(90deg,#0001 33%,#0005 50%,#0001 66%)
       #f2f2f2;
   background-size:300% 100%;
   animation: l1 1s infinite linear;
-  }
-  @keyframes l1 {
-  0% {background-position: right}
-    /* 1. 详情页图片适配：尺寸正常+居中 /
-html > body .notion-page img,
-html > body .notion-page [class="asset"] img 
-max-width: 100% !important;
-width: 100% !important;
-max-height: 80vh !important;
-height: auto !important;
-min-width: unset !important;
-min-height: unset !important;
-object-fit: contain !important;
-display: block !important;
-margin: 0 auto !important;
 }
-/* 2. 核心：重置布局 */
+
+@keyframes l1 {
+  0% {background-position: right}
+}
+
+/* 1. Detail page image adaptation: normal size + center */
+html > body .notion-page img,
+html > body .notion-page [class="asset"] img {
+  max-width: 100% !important;
+  width: 100% !important;
+  max-height: 80vh !important;
+  height: auto !important;
+  min-width: unset !important;
+  min-height: unset !important;
+  object-fit: contain !important;
+  display: block !important;
+  margin: 0 auto !important;
+}
+
+/* 2. Core: reset layout */
 .notion-page,
 .notion-page > div,
 .notion-page > section,
 .notion-page .notion-block,
 .notion-page .notion-block > div {
-position: static !important;
-float: none !important;
-min-height: 0 !important;
-height: auto !important;
-display: block !important;
-overflow: visible !important;
+  position: static !important;
+  float: none !important;
+  min-height: 0 !important;
+  height: auto !important;
+  display: block !important;
+  overflow: visible !important;
 }
-/* 3. 视频容器：居中+仅16px标题间距 /
+
+/* 3. Video container: center + 16px title spacing */
 .notion-page .notion-asset-wrapper {
-position: static !important;
-min-height: 0 !important;
-height: auto !important;
-width: 100% !important;
-max-width: 500px !important; / 容器最大宽度，避免太宽 /
-margin: 16px auto 0 !important; / 容器整体居中，标题下16px间距 */
-padding: 0 !important;
-display: block !important;
+  position: static !important;
+  min-height: 0 !important;
+  height: auto !important;
+  width: 100% !important;
+  max-width: 500px !important;
+  margin: 16px auto 0 !important;
+  padding: 0 !important;
+  display: block !important;
 }
-/* 4. 视频本身：9:16竖屏+完全居中+无拉伸 /
+
+/* 4. Video itself: 9:16 vertical + full center + no stretch */
 .notion-page .notion-asset-wrapper iframe,
 .notion-page .notion-asset-wrapper video {
-width: 100% !important;
-max-width: 300px !important; / 竖屏视频适配宽度 /
-aspect-ratio: 9/16 !important; / 强制9:16竖屏 /
-max-height: 80vh !important;
-object-fit: contain !important;
-border: 0 !important;
-margin: 0 auto !important; / 视频在容器内水平居中 */
-padding: 0 !important;
-display: block !important;
-}
+  width: 100% !important;
+  max-width: 300px !important;
+  aspect-ratio: 9/16 !important;
+  max-height: 80vh !important;
+  object-fit: contain !important;
+  border: 0 !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  display: block !important;
 }
