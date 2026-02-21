@@ -16,29 +16,31 @@ export default function BottomNav(props) {
         {/* 原有移动端导航代码，保留 */}
       </div>
 
-      {/* 桌面端底部：所有内容居左，访客在上，版权在下 */}
+      {/* 桌面端底部：三段式布局，分别居左、居中、居右 */}
       <div className="hidden md:block w-full bg-white dark:bg-gray-800 border-t dark:border-gray-700 py-5 px-8">
-        <div className="container mx-auto max-w-5xl flex flex-col items-start text-sm gap-3">
-          {/* 第一行：访客统计（居左） */}
+        <div className="container mx-auto max-w-5xl flex justify-between items-center text-sm">
+          {/* 左侧：访客统计 */}
           <div className="text-gray-600 dark:text-gray-400 flex items-center space-x-6">
             <span className="busuanzi_container_site_pv flex items-center gap-2">
               <span>👁️‍🗨️</span>
               <span className="busuanzi_value_site_pv">0</span>
             </span>
             <span className="busuanzi_container_site_uv flex items-center gap-2">
-              <span>❤️</span>
+              <span>😍</span>
               <span className="busuanzi_value_site_uv">0</span>
             </span>
           </div>
 
-          {/* 第二行：版权信息 + 链接（居左） */}
+          {/* 中间：点击获取更多 */}
+          <div className="text-gray-600 dark:text-gray-400">
+            <a href="https://jp.hsw123.top/" className="hover:underline text-blue-600 dark:text-blue-400">
+              点击获取更多内容
+            </a>
+          </div>
+
+          {/* 右侧：版权信息 */}
           <div className="text-gray-600 dark:text-gray-400">
             &copy; {new Date().getFullYear()} {siteConfig('AUTHOR')}
-            <span className="ml-2">
-              <a href="https://jp.hsw123.top/" className="hover:underline text-blue-600 dark:text-blue-400">
-                点击获取更多内容
-              </a>
-            </span>
           </div>
         </div>
       </div>
