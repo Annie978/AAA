@@ -12,38 +12,31 @@ export default function BottomNav(props) {
     site_uv: 0
   })
 
-  // 全局初始化不算子，适配任意回调名
+  // 全局初始化不算子，页面加载时就获取数据
   useEffect(() => {
-    // 加载不算子脚本（全局只加载一次）
-    if (document.getElementById('busuanzi-plog-script')) return
-    const script = document.createElement('script')
-    script.id = 'busuanzi-plog-script'
-    script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js'
-    script.async = true
-    document.body.appendChild(script)
+    // 加载不算子脚本
+    const loadBusuanzi = () => {
+      if (document.getElementById('busuanzi-plog-script')) return
+      const script = document.createElement('script')
+      script.id = 'busuanzi-plog-script'
+      script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js'
+      script.async = true
+      document.body.appendChild(script)
+    }
 
-    // 保存原始的 Object.defineProperty
-    const originalDefineProperty = Object.defineProperty
+    // 接收数据并更新状态
+    const handleBusuanzi = (data) => {
+      setBusuanziData({
+        site_pv: data.site_pv || 0,
+        site_uv: data.site_uv || 0
+      })
+    }
 
-    // 拦截所有 BusuanziCallback_* 函数
-    script.onload = () => {
-      Object.defineProperty = function (obj, prop, descriptor) {
-        if (prop.startsWith('BusuanziCallback_') && typeof descriptor.value === 'function') {
-          // 替换回调函数，让它更新我们的状态
-          const originalCallback = descriptor.value
-          descriptor.value = (data) => {
-            setBusuanziData({
-              site_pv: data.site_pv || 0,
-              site_uv: data.site_uv || 0
-            })
-            // 同时调用原始回调，保证其他逻辑不受影响
-            originalCallback(data)
-          }
-        }
-        return originalDefineProperty(obj, prop, descriptor)
-      }
-
-      // 强制请求数据
+    // 初始化并请求数据
+    const initBusuanzi = () => {
+      loadBusuanzi()
+      window.BusuanziCallback_743303877881 = handleBusuanzi
+      
       setTimeout(() => {
         if (window.busuanzi) {
           window.busuanzi.getPv()
@@ -52,9 +45,11 @@ export default function BottomNav(props) {
       }, 500)
     }
 
-    // 清理函数，恢复原始方法
+    initBusuanzi()
+
+    // 清理回调
     return () => {
-      Object.defineProperty = originalDefineProperty
+      window.BusuanziCallback_743303877881 = null
     }
   }, [])
 
@@ -67,31 +62,33 @@ export default function BottomNav(props) {
     <>
       {/* 移动端底部导航栏（保留原有代码） */}
       <div className="fixed bottom-0 z-10 w-full bg-white dark:bg-black dark:border-gray-800 border-t md:hidden">
-        {/* 原有移动端导航代码，保留 */}
+        {/* 这里是你原有移动端 BottomNav 的按钮代码，完全保留 */}
       </div>
 
-      {/* 桌面端底部白色区域：统计+版权（优化排版） */}
-      <div className="hidden md:block w-full bg-white dark:bg-gray-800 border-t dark:border-gray-700 py-5 px-8">
-        <div className="container mx-auto max-w-5xl flex flex-wrap justify-between items-center text-sm gap-4">
-          {/* 左侧：统计数字（加大间距） */}
-          <div className="text-gray-600 dark:text-gray-400 flex items-center space-x-8">
-            <span className="flex items-center gap-2">
-              <span>👁️‍🗨️</span>
-              <span>Total Views: {busuanziData.site_pv}</span>
+      {/* 桌面端底部白色区域：直接显示统计和版权信息 */}
+      <div className="hidden md:block w-full bg-white dark:bg-gray-800 border-t dark:border-gray-700 py-4 px-6">
+        <div className="container mx-auto max-w-4xl flex flex-wrap justify-between items-center text-sm">
+          {/* 左侧：统计数字 */}
+          <div className="text-gray-500 dark:text-gray-400 flex items-center space-x-4">
+            <span>
+              👁️‍🗨️ Total Views: {busuanziData.site_pv}
             </span>
-            <span className="flex items-center gap-2">
-              <span>🖤</span>
-              <span>Unique Visitors: {busuanziData.site_uv}</span>
+            <span>
+              🖤 Unique Visitors: {busuanziData.site_uv}
             </span>
           </div>
 
-          {/* 右侧：版权信息（分行+加大间距） */}
-          <div className="text-gray-600 dark:text-gray-400 flex flex-col md:flex-row items-center gap-3">
-            <span>&copy; {new Date().getFullYear()} {siteConfig('AUTHOR')}. All rights reserved.</span>
-            <span>Powered by <a href="https://www.google.com" className="hover:underline text-blue-600 dark:text-blue-400">NotionNext {siteConfig('VERSION')}</a></span>
+          {/* 右侧：版权信息 */}
+          <div className="text-gray-500 dark:text-gray-400 text-right">
+            &copy; {new Date().getFullYear()} {siteConfig('AUTHOR')}. All rights reserved.
+            <span className="ml-2">
+              Powered by <a href="https://www.google.com" className="hover:underline">NotionNext {siteConfig('VERSION')}</a>
+            </span>
           </div>
         </div>
       </div>
+
+      {/* 彻底移除右下角感叹号按钮，这里留空即可 */}
     </>
   )
 }
