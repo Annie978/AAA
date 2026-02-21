@@ -11,58 +11,36 @@ export const Footer = props => {
     parseInt(since) < currentYear ? since + '-' + currentYear : currentYear
 
   useEffect(() => {
-    // Load busuanzi script once
-    const loadScript = () => {
+    // Load busuanzi script only once
+    const loadBusuanzi = () => {
       if (document.getElementById('busuanzi-script')) return
       const script = document.createElement('script')
       script.id = 'busuanzi-script'
       script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js'
-      script.async = true
+      script.async = false // 同步加载，避免时机问题
       document.body.appendChild(script)
     }
 
-    // Global callback for all components
-    const setGlobalCallback = () => {
-      window.BusuanziCallback_743303877881 = (data) => {
-        // Save data to global object
-        window.busuanziGlobalData = data
-        
-        // Update all busuanzi elements
-        const pvElements = document.querySelectorAll('.busuanzi_value_site_pv')
-        const uvElements = document.querySelectorAll('.busuanzi_value_site_uv')
-        
-        pvElements.forEach(el => el.textContent = data.site_pv || 0)
-        uvElements.forEach(el => el.textContent = data.site_uv || 0)
-      }
-    }
-
-    // Force refresh data
-    const refreshData = () => {
+    // Initialize and refresh data
+    const initBusuanzi = () => {
+      loadBusuanzi()
+      
+      // Re-get data every time component mounts
       setTimeout(() => {
         if (window.busuanzi) {
           window.busuanzi.getPv()
           window.busuanzi.getUv()
         }
-      }, 500)
+        
+        // Fallback: if auto get fails, use global callback
+        window.BusuanziCallback_743303877881 = (data) => {
+          document.querySelector('.busuanzi_value_site_pv').textContent = data.site_pv || 0
+          document.querySelector('.busuanzi_value_site_uv').textContent = data.site_uv || 0
+        }
+      }, 300)
     }
 
-    loadScript()
-    setGlobalCallback()
-    refreshData()
-
-    // Re-refresh when theme changes
-    const observer = new MutationObserver(() => {
-      if (window.busuanziGlobalData) {
-        const pvElements = document.querySelectorAll('.busuanzi_value_site_pv')
-        const uvElements = document.querySelectorAll('.busuanzi_value_site_uv')
-        pvElements.forEach(el => el.textContent = window.busuanziGlobalData.site_pv || 0)
-        uvElements.forEach(el => el.textContent = window.busuanziGlobalData.site_uv || 0)
-      }
-    })
-
-    observer.observe(document.body, { childList: true, subtree: true })
-
-    return () => observer.disconnect()
+    initBusuanzi()
   }, [])
 
   return (
@@ -70,6 +48,7 @@ export const Footer = props => {
       <DarkModeButton className='text-center pt-4' />
 
       <div className='container mx-auto max-w-4xl py-6 md:flex flex-wrap md:flex-no-wrap md:justify-between items-center text-sm'>
+        {/* 统计 */}
         <div className='text-center mb-3 md:mb-0 text-xs text-gray-500 dark:text-gray-400'>
           <span className="busuanzi_container_site_pv">
             👁️‍🗨️<span className="busuanzi_value_site_pv">0</span>
