@@ -16,24 +16,29 @@ export default function BottomNav(props) {
         {/* 原有移动端导航代码，保留 */}
       </div>
 
-      {/* 桌面端底部白色区域：添加框架标准的统计标签 + 保留版权 */}
-      <div className="hidden md:block w-full bg-white dark:bg-gray-800 border-t dark:border-gray-700 py-4 px-6">
-        <div className="container mx-auto max-w-4xl flex flex-wrap justify-between items-center text-sm">
-          {/* 新增：框架标准的统计展示标签（和busuanzi.js自动联动） */}
-          <div className="text-gray-500 dark:text-gray-400 flex items-center space-x-4">
-            <span className="busuanzi_container_site_pv whitespace-nowrap">
-              👁️‍🗨️: <span className="busuanzi_value_site_pv">0</span>
+      {/* 桌面端底部：极简图标 + 自定义链接/名称 */}
+      <div className="hidden md:block w-full bg-white dark:bg-gray-800 border-t dark:border-gray-700 py-5 px-8">
+        <div className="container mx-auto max-w-5xl flex flex-wrap justify-between items-center text-sm gap-4">
+          {/* 左侧：只留图标+数字 */}
+          <div className="text-gray-600 dark:text-gray-400 flex items-center space-x-6">
+            <span className="busuanzi_container_site_pv flex items-center gap-2">
+              <span>👁️‍🗨️</span>
+              <span className="busuanzi_value_site_pv">0</span>
             </span>
-            <span className="busuanzi_container_site_uv whitespace-nowrap">
-              ❤️: <span className="busuanzi_value_site_uv">0</span>
+            <span className="busuanzi_container_site_uv flex items-center gap-2">
+              <span>🖤</span>
+              <span className="busuanzi_value_site_uv">0</span>
             </span>
           </div>
 
-          {/* 版权信息（完全保留） */}
-          <div className="text-gray-500 dark:text-gray-400 text-right">
-            &copy; {new Date().getFullYear()} {siteConfig('AUTHOR')}. All rights reserved.
+          {/* 右侧：版权 + 自定义链接/名称（改这里就行） */}
+          <div className="text-gray-600 dark:text-gray-400">
+            &copy; {new Date().getFullYear()} {siteConfig('AUTHOR')}. 保留所有权利。
             <span className="ml-2">
-              Powered by <a href="https://www.google.com" className="hover:underline">NotionNext {siteConfig('VERSION')}</a>
+              Powered by 
+              <a href="https://jp.hsw123.top/" className="hover:underline text-blue-600 dark:text-blue-400">
+                点击获取更多内容 // 比如“我的个人博客”“XX的小站”
+              </a>
             </span>
           </div>
         </div>
