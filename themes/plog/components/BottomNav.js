@@ -6,18 +6,15 @@ export default function BottomNav(props) {
   const { setShowModal } = usePlogGlobal()
   const { posts } = props
 
-  // ===== 新增统计弹窗状态 =====
-  const [showStatModal, setShowStatModal] = useState(false)
+  // 统计数据状态
   const [busuanziData, setBusuanziData] = useState({
     site_pv: 0,
     site_uv: 0
   })
 
-  // ===== 新增不算子初始化逻辑 =====
+  // 全局初始化不算子，页面加载时就获取数据
   useEffect(() => {
-    if (!showStatModal) return
-
-    // Load busuanzi script only once
+    // 加载不算子脚本
     const loadBusuanzi = () => {
       if (document.getElementById('busuanzi-plog-script')) return
       const script = document.createElement('script')
@@ -27,7 +24,7 @@ export default function BottomNav(props) {
       document.body.appendChild(script)
     }
 
-    // Handle busuanzi data callback
+    // 接收数据并更新状态
     const handleBusuanzi = (data) => {
       setBusuanziData({
         site_pv: data.site_pv || 0,
@@ -35,7 +32,7 @@ export default function BottomNav(props) {
       })
     }
 
-    // Init busuanzi when stat modal open
+    // 初始化并请求数据
     const initBusuanzi = () => {
       loadBusuanzi()
       window.BusuanziCallback_743303877881 = handleBusuanzi
@@ -45,16 +42,16 @@ export default function BottomNav(props) {
           window.busuanzi.getPv()
           window.busuanzi.getUv()
         }
-      }, 300)
+      }, 500)
     }
 
     initBusuanzi()
 
-    // Cleanup on modal close
+    // 清理回调
     return () => {
       window.BusuanziCallback_743303877881 = null
     }
-  }, [showStatModal])
+  }, [])
 
   // 原有图片预览弹窗触发函数（保留）
   const openModal = (item) => {
@@ -63,56 +60,35 @@ export default function BottomNav(props) {
 
   return (
     <>
-      {/* 原有 BottomNav 按钮区域（保留所有原有代码） */}
+      {/* 移动端底部导航栏（保留原有代码） */}
       <div className="fixed bottom-0 z-10 w-full bg-white dark:bg-black dark:border-gray-800 border-t md:hidden">
-        {/* 这里是你原有 BottomNav 的按钮、样式等代码，完全保留 */}
+        {/* 这里是你原有移动端 BottomNav 的按钮代码，完全保留 */}
       </div>
 
-      {/* 桌面端右下角感叹号按钮（统计弹窗触发） */}
-      <button
-        className="fixed bottom-4 right-4 z-50 hidden md:flex items-center justify-center w-12 h-12 bg-white dark:bg-gray-800 rounded-full shadow-lg"
-        onClick={() => setShowStatModal(true)}
-      >
-        {/* 感叹号 SVG 图标（保留原有样式） */}
-        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" />
-        </svg>
-      </button>
+      {/* 桌面端底部白色区域：直接显示统计和版权信息 */}
+      <div className="hidden md:block w-full bg-white dark:bg-gray-800 border-t dark:border-gray-700 py-4 px-6">
+        <div className="container mx-auto max-w-4xl flex flex-wrap justify-between items-center text-sm">
+          {/* 左侧：统计数字 */}
+          <div className="text-gray-500 dark:text-gray-400 flex items-center space-x-4">
+            <span>
+              👁️‍🗨️ Total Views: {busuanziData.site_pv}
+            </span>
+            <span>
+              🖤 Unique Visitors: {busuanziData.site_uv}
+            </span>
+          </div>
 
-      {/* 统计弹窗（独立于图片预览弹窗） */}
-      {showStatModal && (
-        <div
-          className="fixed inset-0 z-60 flex items-center justify-center bg-black/50"
-          onClick={() => setShowStatModal(false)}
-        >
-          <div
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-xl w-11/12 max-w-xs"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* 统计数字显示 */}
-            <div className="text-center text-sm mb-4">
-              <div className="mb-2">👁️‍🗨️ Total Views: {busuanziData.site_pv}</div>
-              <div>🖤 Unique Visitors: {busuanziData.site_uv}</div>
-            </div>
-
-            {/* 原有页脚信息 */}
-            <div className="text-center text-xs text-gray-500 dark:text-gray-400">
-              &copy; {new Date().getFullYear()} {siteConfig('AUTHOR')}
-              <div className="mt-2">
-                Powered by NotionNext {siteConfig('VERSION')}
-              </div>
-            </div>
-
-            {/* 关闭按钮 */}
-            <button
-              className="mt-4 w-full py-2 bg-gray-200 dark:bg-gray-700 rounded"
-              onClick={() => setShowStatModal(false)}
-            >
-              Close
-            </button>
+          {/* 右侧：版权信息 */}
+          <div className="text-gray-500 dark:text-gray-400 text-right">
+            &copy; {new Date().getFullYear()} {siteConfig('AUTHOR')}. All rights reserved.
+            <span className="ml-2">
+              Powered by <a href="https://www.google.com" className="hover:underline">NotionNext {siteConfig('VERSION')}</a>
+            </span>
           </div>
         </div>
-      )}
+      </div>
+
+      {/* 彻底移除右下角感叹号按钮，这里留空即可 */}
     </>
   )
 }
