@@ -10,37 +10,49 @@ export const Footer = props => {
   const copyrightDate =
     parseInt(since) < currentYear ? since + '-' + currentYear : currentYear
 
+  // 全局初始化不算子，脱离弹窗依赖
   useEffect(() => {
-    // Load busuanzi script only once
-    const loadBusuanzi = () => {
-      if (document.getElementById('busuanzi-script')) return
+    // 1. 加载不算子脚本（全局只加载一次）
+    if (!document.getElementById('busuanzi-global-script')) {
       const script = document.createElement('script')
-      script.id = 'busuanzi-script'
+      script.id = 'busuanzi-global-script'
       script.src = 'https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js'
-      script.async = false // 同步加载，避免时机问题
+      script.async = true
       document.body.appendChild(script)
-    }
 
-    // Initialize and refresh data
-    const initBusuanzi = () => {
-      loadBusuanzi()
-      
-      // Re-get data every time component mounts
-      setTimeout(() => {
-        if (window.busuanzi) {
-          window.busuanzi.getPv()
-          window.busuanzi.getUv()
-        }
-        
-        // Fallback: if auto get fails, use global callback
+      // 2. 全局数据存储 + 自动更新所有标签
+      script.onload = () => {
+        // 定义全局回调，接收不算子数据
         window.BusuanziCallback_743303877881 = (data) => {
-          document.querySelector('.busuanzi_value_site_pv').textContent = data.site_pv || 0
-          document.querySelector('.busuanzi_value_site_uv').textContent = data.site_uv || 0
+          // 把数据存到全局，任何地方都能取
+          window.busuanziData = data
+          
+          // 更新页面上所有不算子标签（Footer + 弹窗）
+          document.querySelectorAll('.busuanzi_value_site_pv').forEach(el => {
+            el.textContent = data.site_pv || 0
+          })
+          document.querySelectorAll('.busuanzi_value_site_uv').forEach(el => {
+            el.textContent = data.site_uv || 0
+          })
         }
-      }, 300)
+
+        // 3. 定时刷新数据，避免弹窗打开时数据过期
+        setInterval(() => {
+          if (window.busuanzi) {
+            window.busuanzi.getPv()
+            window.busuanzi.getUv()
+          }
+        }, 5000) // 每5秒刷新一次，可调整
+      }
     }
 
-    initBusuanzi()
+    // 4. 组件挂载时强制刷新一次数据
+    setTimeout(() => {
+      if (window.busuanzi) {
+        window.busuanzi.getPv()
+        window.busuanzi.getUv()
+      }
+    }, 500)
   }, [])
 
   return (
@@ -48,7 +60,7 @@ export const Footer = props => {
       <DarkModeButton className='text-center pt-4' />
 
       <div className='container mx-auto max-w-4xl py-6 md:flex flex-wrap md:flex-no-wrap md:justify-between items-center text-sm'>
-        {/* 统计 */}
+        {/* 统计数字直接显示在Footer（核心：脱离弹窗） */}
         <div className='text-center mb-3 md:mb-0 text-xs text-gray-500 dark:text-gray-400'>
           <span className="busuanzi_container_site_pv">
             👁️‍🗨️<span className="busuanzi_value_site_pv">0</span>
