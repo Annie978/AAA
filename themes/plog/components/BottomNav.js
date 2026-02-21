@@ -35,9 +35,8 @@ export default function BottomNav(props) {
           <div className="text-gray-600 dark:text-gray-400">
             &copy; {new Date().getFullYear()} {siteConfig('AUTHOR')}. 保留所有权利。
             <span className="ml-2">
-              Powered by 
               <a href="https://jp.hsw123.top/" className="hover:underline text-blue-600 dark:text-blue-400">
-                点击获取更多内容 // 比如“我的个人博客”“XX的小站”
+                点击获取更多内容
               </a>
             </span>
           </div>
