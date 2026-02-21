@@ -1,6 +1,7 @@
 import { BeiAnGongAn } from '@/components/BeiAnGongAn'
 import DarkModeButton from '@/components/DarkModeButton'
 import { siteConfig } from '@/lib/config'
+import { useEffect } from 'react' // Add this line
 
 export const Footer = props => {
   const d = new Date()
@@ -8,6 +9,27 @@ export const Footer = props => {
   const since = siteConfig('SINCE')
   const copyrightDate =
     parseInt(since) < currentYear ? since + '-' + currentYear : currentYear
+
+  // Add this useEffect block
+  useEffect(() => {
+    // Define callback to receive busuanzi data
+    window.BusuanziCallback_743303877881 = (data) => {
+      const pvElement = document.querySelector('.busuanzi_value_site_pv')
+      const uvElement = document.querySelector('.busuanzi_value_site_uv')
+      if (pvElement && data.site_pv) {
+        pvElement.textContent = data.site_pv
+      }
+      if (uvElement && data.site_uv) {
+        uvElement.textContent = data.site_uv
+      }
+    }
+
+    // Trigger busuanzi to reload data if script loaded
+    if (window.busuanzi) {
+      window.busuanzi.getPv()
+      window.busuanzi.getUv()
+    }
+  }, [])
 
   return (
     <footer className='z-10 relative w-full bg-white px-6 border-t dark:border-hexo-black-gray dark:bg-hexo-black-gray '>
